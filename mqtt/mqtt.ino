@@ -71,4 +71,11 @@ void loop() {
     reconnect();
   }
   client.loop();
+
+  String message = "Hello from ESP32!";
+  if (client.publish("test", message.c_str())) {
+    Serial.println("Message Published");
+  }
+
+  delay(5000);  // Publish every 5 seconds  
 }
