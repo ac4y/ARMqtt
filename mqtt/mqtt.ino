@@ -2,8 +2,8 @@
 #include <PubSubClient.h>
 #include <WiFiClientSecure.h>
 // 🔹 Wi-Fi beállítások
-const char* ssid = "PL@NDBS";//"Telek2023";
-const char* password = "Jelszo2007118";//"Mariaudvar2023";
+const char* ssid = "HUAWEI_B535_C19F"; //"PL@NDBS";//"Telek2023";
+const char* password = "435L8Em6LGm"; // "Jelszo2007118";//"Mariaudvar2023";
 
 // 🔹 MQTT broker beállítások (pl. HiveMQ Cloud)
 const char* mqtt_server = "7ebd81b67c5d4be68971905b7c0ad248.s1.eu.hivemq.cloud";  // HiveMQ Cloud esetén
