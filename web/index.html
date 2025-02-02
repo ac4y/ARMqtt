@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MQTT WebSocket Kliens</title>
+</head>
+<body>
+    <h2>MQTT WebSocket kliens</h2>
+    <p>📡 Kapcsolódás állapota: <span id="status">Nincs kapcsolat</span></p>
+    
+    <button onclick="connectMQTT()">🔌 Kapcsolódás</button>
+    <button onclick="publishMessage()">📤 Üzenet küldése</button>
+    
+    <h3>📩 Bejövő üzenetek:</h3>
+    <ul id="messages"></ul>
+
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script>
+        const BROKER = "wss://7ebd81b67c5d4be68971905b7c0ad248.s1.eu.hivemq.cloud:8884/mqtt";
+        const USERNAME = "admin";
+        const PASSWORD = "Manage2000";
+        const TOPIC = "test2";
+
+        let client;
+
+        function connectMQTT() {
+            client = mqtt.connect(BROKER, {
+                username: USERNAME,
+                password: PASSWORD,
+                protocolVersion: 5
+            });
+
+            client.on("connect", () => {
+                document.getElementById("status").innerText = "✅ Kapcsolódva";
+                console.log("✅ Sikeresen kapcsolódva!");
+
+                // Feliratkozás a témára
+                client.subscribe(TOPIC, (err) => {
+                    if (!err) {
+                        console.log(`📡 Feliratkozva a(z) '${TOPIC}' témára!`);
+                    }
+                });
+            });
+
+            client.on("message", (topic, message) => {
+                console.log(`📩 Üzenet érkezett: ${message.toString()}`);
+                const msgList = document.getElementById("messages");
+                const li = document.createElement("li");
+                li.textContent = `${topic}: ${message.toString()}`;
+                msgList.appendChild(li);
+            });
+
+            client.on("error", (err) => {
+                console.error("⚠️ Hiba történt:", err);
+            });
+        }
+
+        function publishMessage() {
+            const message = "Hello from WebSocket!";
+            client.publish(TOPIC, message, { qos: 1 }, (err) => {
+                if (!err) {
+                    console.log(`📤 Üzenet elküldve: ${message}`);
+                } else {
+                    console.error("⚠️ Hiba az üzenet küldésekor:", err);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
