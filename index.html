@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MQTT WebSocket Kliens</title>
+</head>
+<body>
+    <h2>FITDICTIVE kliens teszt (szenzor érték lekérdezése)</h2>
+    <p>📡 Kapcsolat állapota: <span id="status">OFFLINE</span></p>
+    
+    <!--<button onclick="connectMQTT()">🔌 Kapcsolódás</button>-->
+    <!--
+    <button 
+        onclick="publishMessage()";
+        style="height:100px"
+    >📤 izzó kapcsolás</button>
+-->
+    <button 
+        onclick="publishAskTemperature()";
+        style="height:100px"
+    >📤 hőmérséklet</button>
+    <button 
+        onclick="publishAskHumidity()";
+        style="height:100px"
+    >📤 páratartalom</button>
+<!-- -->   
+    <h3>📩 Információ:</h3>
+    <div id="information"></div>
+<!-- -->
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script>
+        const BROKER = "wss://7ebd81b67c5d4be68971905b7c0ad248.s1.eu.hivemq.cloud:8884/mqtt";
+        const USERNAME = "admin";
+        const PASSWORD = "Manage2000";
+        const TOPIC_STATEMENT = "statement";
+        const TOPIC_INFO = "info";
+
+        let client;
+
+        connectMQTT();
+
+        function connectMQTT() {
+            client = mqtt.connect(BROKER, {
+                username: USERNAME,
+                password: PASSWORD,
+                protocolVersion: 5
+            });
+
+            client.on("connect", () => {
+                document.getElementById("status").innerText = "✅ ONLINE";
+                console.log("✅ Sikeresen kapcsolódva!");
+
+                // Feliratkozás a témára
+                client.subscribe(TOPIC_INFO, (err) => {
+                    if (!err) {
+                        console.log(`📡 Feliratkozva a(z) '${TOPIC_INFO}' témára!`);
+                    }
+                });
+            });
+
+            client.on("message", (topic, message) => {
+                
+                console.log(`📩 Üzenet érkezett: ${message.toString()}`);
+                /*
+                const msgList = document.getElementById("messages");
+                const li = document.createElement("li");
+                li.textContent = `${topic}: ${message.toString()}`;
+                msgList.appendChild(li);
+                */
+                var projector = document.getElementById("information");
+                projector.innerHTML=message;
+            });
+
+            client.on("error", (err) => {
+                console.error("⚠️ Hiba történt:", err);
+            });
+        }
+
+        function publishMessage() {
+            const message = "Hello from WebSocket!";
+            client.publish(TOPIC_STATEMENT, message, { qos: 1 }, (err) => {
+                if (!err) {
+                    console.log(`📤 Üzenet elküldve: ${message}`);
+                } else {
+                    console.error("⚠️ Hiba az üzenet küldésekor:", err);
+                }
+            });
+        }
+
+        function publishAskTemperature() {
+            const message = "temperature";
+            client.publish(TOPIC_STATEMENT, message, { qos: 1 }, (err) => {
+                if (!err) {
+                    console.log(`📤 Üzenet elküldve: ${message}`);
+                } else {
+                    console.error("⚠️ Hiba az üzenet küldésekor:", err);
+                }
+            });
+        }
+        function publishAskHumidity() {
+            const message = "humidity";
+            client.publish(TOPIC_STATEMENT, message, { qos: 1 }, (err) => {
+                if (!err) {
+                    console.log(`📤 Üzenet elküldve: ${message}`);
+                } else {
+                    console.error("⚠️ Hiba az üzenet küldésekor:", err);
+                }
+            });
+        }
+
+
+</script>
+</body>
+</html>
