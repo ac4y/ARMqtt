@@ -10,12 +10,12 @@
     <p>📡 Kapcsolat állapota: <span id="status">OFFLINE</span></p>
     
     <!--<button onclick="connectMQTT()">🔌 Kapcsolódás</button>-->
-    <!--
+<!-- -->
     <button 
-        onclick="publishMessage()";
+        onclick="publishAskBulbSwitch()";
         style="height:100px"
     >📤 izzó kapcsolás</button>
--->
+<!-- -->
     <button 
         onclick="publishAskTemperature()";
         style="height:100px"
@@ -24,7 +24,12 @@
         onclick="publishAskHumidity()";
         style="height:100px"
     >📤 páratartalom</button>
-<!-- -->   
+    <button 
+        onclick="publishAskPressure()";
+        style="height:100px"
+    >📤 nyomás</button>
+
+    <!-- -->   
     <h3>📩 Információ:</h3>
     <div id="information"></div>
 <!-- -->
@@ -98,6 +103,7 @@
                 }
             });
         }
+
         function publishAskHumidity() {
             const message = "humidity";
             client.publish(TOPIC_STATEMENT, message, { qos: 1 }, (err) => {
@@ -109,6 +115,27 @@
             });
         }
 
+        function publishAskPressure() {
+            const message = "pressure";
+            client.publish(TOPIC_STATEMENT, message, { qos: 1 }, (err) => {
+                if (!err) {
+                    console.log(`📤 Üzenet elküldve: ${message}`);
+                } else {
+                    console.error("⚠️ Hiba az üzenet küldésekor:", err);
+                }
+            });
+        }
+
+        function publishAskBulbSwitch() {
+            const message = "bulb";
+            client.publish(TOPIC_STATEMENT, message, { qos: 1 }, (err) => {
+                if (!err) {
+                    console.log(`📤 Üzenet elküldve: ${message}`);
+                } else {
+                    console.error("⚠️ Hiba az üzenet küldésekor:", err);
+                }
+            });
+        }
 
 </script>
 </body>
