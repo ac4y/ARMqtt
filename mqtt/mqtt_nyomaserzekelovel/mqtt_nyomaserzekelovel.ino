@@ -43,8 +43,10 @@ void callback(char* topic_statement, byte* payload, unsigned int length) {
 
   if (actualStatement == "t")
     info=temperature;
-  else if (actualStatement == "n")
+  else if (actualStatement == "p")
     info=pressure;
+  else if (actualStatement == "b")
+    info="n/a";
   else
     info=humidity;
 
